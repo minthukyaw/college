@@ -1,0 +1,38 @@
+/* 
+    Document   : college
+    Created on : Jun 4, 2013, 4:40:11 PM
+    Author     : Minthukyaw
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 15px;
+}
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+    font-size: 16px;
+    height: auto;
+    margin-bottom: 25px;
+    padding: 7px 9px;
+}
+#myModal{
+    width: 400px;   
+    left: 725px; /* was 10% */
+}
+#example{
+    display: none;
+}
+.errorinfo{
+    color: #5BC0DE;
+}
+.error_msg{
+    background-color: #F7F7F9;
+    border:1px solid #E1E1E8;
+    color:  #DD1144;
+    text-decoration: none;
+    margin-bottom: 15px;
+    padding-top: 5px;
+}

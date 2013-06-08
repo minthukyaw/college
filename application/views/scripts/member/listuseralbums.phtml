@@ -1,0 +1,29 @@
+
+<a href="<?php echo $this->url(array('controller'=>'member',
+'action'=>'allalbum', 'id'=>$album->ID));?>">home</a>
+
+<table>
+<tr>
+<th>Name</th>
+<th>Catagory</th>
+<th>&nbsp;</th>
+</tr>
+
+
+<?php 
+if($this->useralbums!=null){
+    
+    foreach($this->useralbums as $album) : ?>
+<tr>
+<td><?php echo $this->escape($album->name);?></td>
+<td><?php echo $this->escape($album->catagory);?></td>
+<td>
+    <a href="/member/edituseralbum?code=<?php echo $album->ID ?>">Edit</a> 
+<a href="/member/deletealbum?code=<?php echo $album->ID ?>" onclick ="return confirm('Are you sure?');">Delete</a>
+<a href="/song/index?code=<?php echo $album->ID ?>">AddSong </a>
+<a href="/song/viewsongs?code=<?php echo $album->ID ?>">View Songs </a>
+</td>
+</tr>
+    <?php endforeach;} else {?><p> You have no album in your account</p><br>
+    Add your album here <a href="/member">Add your album here</a><?php } ?>
+</table>

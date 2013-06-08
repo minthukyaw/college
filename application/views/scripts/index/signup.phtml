@@ -1,0 +1,141 @@
+<script src="/js/jquery.js"></script>
+<blockquote>
+    <p style="color:#0088CC">Sign Up With Your Baruch Email</p>
+</blockquote>
+<?php if($this->error_msg):?>
+<div class="span4 error_msg"> 
+    <ul>
+       <?php foreach($this->error_msg as $error):?>
+        <li><?= $error ?></li>
+        <?php endforeach;?>
+        
+    </ul>
+</div>
+<?php endif?>
+<div style="clear: both"></div>
+<form class="form-horizontal" id="signup" method="post" action="/index/signup" >
+    <div class="control-group">
+        <label class="control-label" for="inputUsername">Username</label>
+        <div class="controls">
+            <input type="text" name="username" id="inputUsername" placeholder="enter username" value="<?= $this->username ?>">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="inputEmail">Email</label>
+        <div class="controls">
+            <input type="text" name="email" id="inputEmail" placeholder="example@baruchmail.cuny.edu" value="<?= $this->email ?>">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="inputPassword">Password</label>
+        <div class="controls">
+            <input type="password" id="inputPassword" placeholder="Password" name="password" value="<?= $this->password ?>">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="inputPassword">Confirm Password</label>
+        <div class="controls">
+            <input type="password" id="inputComPassword" placeholder="Confirm Password" name="conpassword" value="<?= $this->conpassword ?>">
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <button id="sub" type="submit" class="btn btn-info submit">Bam!</button>
+        </div>
+    </div>
+</form>
+
+
+    
+
+<script>
+    
+    $(document).ready(function(){      
+        
+        $('input').focusout(function(){        
+            
+            var inputId = $(this).attr('id');          
+            var inputValue = $(this).val();
+            var inputlength = inputValue.lenght;
+            
+            if($(this).attr('id') == 'inputEmail'){
+                validateEmail($(this).val());
+            }else if(inputId =='inputUsername'){
+                if(inputValue.length < 2 ){
+                    $(this).parent().parent().addClass('error');
+                    $('#inputUsername').after("<span class='errorinfo'> Username must be at least 2 characters</span>");
+                }else{
+                    $(this).parent().parent().addClass('success')
+                }
+            }else if(inputId == 'inputPassword'){
+                if(inputValue.length < 8 ){
+                    $(this).parent().parent().addClass('error');
+                    $('#inputPassword').after("<span class='errorinfo'> Password must be at least 8 characters</span>");
+                }else{
+                    $(this).parent().parent().addClass('success')
+                }
+            }else{
+                var pwdvalue = $('#inputPassword').val();
+                if(pwdvalue != $('#inputComPassword').val()){
+                    $(this).parent().parent().addClass('error');
+                    $('#inputComPassword').after("<span class='errorinfo'> Password are not same</span>");
+                }else if($('#inputComPassword').val() == ""){
+                    $(this).parent().parent().addClass('error');
+                     $('#inputComPassword').after("<span class='errorinfo'> Password can't be blank</span>");
+                }else{
+                    $(this).parent().parent().addClass('success');
+                }
+            }       
+                   
+        });//focusOut
+        
+        $('input').focusin(function(){
+            $(this).parent().parent().removeClass('success error');
+            $(this).siblings('.errorinfo').remove();
+            
+        });//focusin
+        
+        function validateEmail(email) {
+            var re = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
+            if (re.test(email)) {
+                if (email.indexOf('@baruchmail.cuny.edu', email.length - '@baruchmail.cuny.edu'.length) !== -1) {
+                    $('#inputEmail').parent().parent().addClass('success');
+                } else {
+                    $('#inputEmail').parent().parent().addClass('error');
+                     $('#inputEmail').after("<span class='errorinfo'> must be baruch email address</span>");
+                }
+            } else {
+                $('#inputEmail').parent().parent().addClass('error');
+                $('#inputEmail').after("<span class='errorinfo'> enter your baruch email</span>");
+            }
+        }//validate email 
+        
+        $('.sub').on('click',function(e){
+            var check = $('#inputUsername, #inputEmail, #inputPassword, #inputComPassword').parent().parent().hasClass('success');
+            if(!check){
+                alert('humm...something is not correct!');
+                e.preventDefault();
+                return false;
+            }else{
+                var username = $('#inputUsername').val();
+                var email = $('#inputEmail').val();
+                var password = $('#inputPassword').val();
+                var compassword = $('#inputComPassword').val()
+                
+                $.post('/index/signup',{
+                        'username':username,
+                        'email':email,
+                        'password':password,
+                        'confirmpassword':compassword
+                },function(data){
+                   console.log(data); 
+                   
+                },'json')//post
+            } 
+            
+            return false;
+        });
+        
+    });
+</script>
+

@@ -1,0 +1,64 @@
+<!--<a href="<?php echo $this->url(array('controller' => 'member',
+    'action' => 'allalbum', 'id' => $album->ID));
+?>">home</a> -->
+
+<table>
+    <tr>
+        <th>Name</th>
+
+        <th>&nbsp;</th>
+    </tr>
+    <?php
+    if ($this->songs != null) {
+
+
+        foreach ($this->songs as $songs) :
+            
+
+            if ($this->user_id == $songs->account_id) {
+                ?>
+                <tr>
+                    <td><a href="/song/viewsongdetail?songid=<?php echo $songs->ID ?>"> <?php echo $this->escape($songs->url)
+
+
+
+
+                ;
+                ?></a></td>
+
+                    <td>
+
+                        <a href="/song/repin?orgsongid=<?php echo $songs->ID ?>"> Repin (<?php echo $songs->repin; ?>)</a>
+
+                        <a href="/song/deletesong?code=<?php echo $songs->ID ?>" onclick ="return confirm('Are you sure?');">Delete</a>
+
+                        <a href="/song/like?songid=<?php echo $songs->ID ?>&albumid=<?php echo $songs->playlist_id ?>"> Like (<?php echo $this->song_like[$songs->ID]; ?>)</a>
+                    </td>
+
+                </tr>
+                    <?php } else { ?>
+
+                <td><a href="/song/viewsongdetail?songid=<?php echo $songs->ID ?>"> <?php echo $this->escape($songs->url)
+
+
+
+
+            ;
+            ?></a></td>
+
+                <td>
+
+                    <a href="/song/repin?orgsongid=<?php echo $songs->ID ?>"> Repin (<?php echo $songs->repin; ?>)</a>
+
+            <!--<a href="/song/deletesong?code=<?php echo $songs->ID ?>" onclick ="return confirm('Are you sure?');">Delete</a> -->
+
+                    <a href="/song/like?songid=<?php echo $songs->ID ?>&albumid=<?php echo $songs->playlist_id ?>"> Like (<?php echo $this->song_like[$songs->ID]; ?>)</a>
+                </td>
+
+            </tr>
+        <?php } ?>
+    <?php
+    endforeach;
+} else {
+    ?><p> There is not song in this album </p><?php } ?>
+</table>

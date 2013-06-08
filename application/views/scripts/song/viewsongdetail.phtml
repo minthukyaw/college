@@ -1,0 +1,47 @@
+
+    
+        <style>
+            #comment_form {display: none}
+        </style>
+        
+   
+<?php
+echo $this->song_url;?><br/>
+<?php if($this->song_id!=null){ ?>
+
+<?php foreach ($this->all_comment as $comments){
+    echo $comments->comment; ?> <br/>
+<?php }?>
+
+
+<a href="/song/likesongdetail?songid=<?php echo $this->song_id?>"> Like (<?php echo $this->song_like; ?>)</a>
+<a id="comment_link"> Comment </a>
+<div id="comment_form">
+    <?php echo $this->comment_form; ?>
+</div>
+<?php } else {
+    
+    echo "There is no comment for this song"; ?> <br/>
+<a href="/song/likesongdetail?songid=<?php echo $this->song_id?>"> Like (<?php echo $this->song_like; ?>)</a>
+<a> Comment </a>
+<div id="comment_form">
+    <?php echo $this->comment_form; ?>
+</div>
+    
+<?php }?>
+<script>
+        $(document).ready(function(){
+            
+            $('#comment_link').click(function(){
+               
+               $('#comment_form').slideDown(function(){
+                   
+               });
+            });
+        });
+    
+
+        </script>
+   
+
+

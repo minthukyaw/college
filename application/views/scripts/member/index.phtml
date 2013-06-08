@@ -1,0 +1,23 @@
+
+<h3>Welcome <?php echo $this->name ?></h3>
+ 
+ <h5><a href="<?php echo $this->url(array('controller'=>'member',
+'action'=>'listuseralbums', 'id'=>$album->ID));?>">My Album</a></h5>
+<table>
+
+<?php foreach($this->myalbums as $album):?>
+<tr>
+<td><?php echo $this->escape($album->name);?></td>
+<td><?php echo $this->escape($album->catagory);?></td>
+<td>
+<a href="/member/edituseralbum?code=<?php echo $album->ID ?>">Edit</a> 
+<a href="/member/deletealbum?code=<?php echo $album->ID ?>" onclick ="return confirm('Are you sure?');">Delete</a>
+<a href="/song/index?code=<?php echo $album->ID ?>">AddSong </a>
+<a href="/song/viewsongs?code=<?php echo $album->ID ?>">View Songs </a>
+</td>
+</tr>
+<?php endforeach;?>
+</table> <br/>
+<h6> Create or Add Your Own Album  Here </h6>
+ 
+<?php echo $this->myform;?>

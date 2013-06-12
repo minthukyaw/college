@@ -1,0 +1,18 @@
+<div class="span6 main">
+    <table>
+   <?php foreach($this->getposts as $posts):?>
+            <tr>
+                <div>
+                    <p><a href="/member/profile/?id=<?= $posts['poster']?>"><img class="wall_img" src="<?= $posts['profile_pic'] ?>"><?= $posts['first_name']?>&nbsp;<?= $posts['last_name']?></a></p>
+                    <p class="post"><?= stripslashes($posts['post']) ?></p>
+                    <span class="time">
+                        Posted On <?= date("jS \ F Y h:i:s A e",$posts['created']) ?>
+                    </span>
+                </div>
+                <div style="clear: both"></div>
+                <hr>   
+            </tr>
+            <?php endforeach;?>
+    </table>
+</div>
+<div style="clear: both"></div>

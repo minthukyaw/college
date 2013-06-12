@@ -1,13 +1,18 @@
-<?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-if($this->fail){
-    echo'Invalid user name and password';
-}
-   
-echo $this->signin;
-?>
+<div class="span3 signin_logo">
+    <img src="/img/bearcats.jpg" class="img-rounded">
+</div>
+<div class="span5">
+    <form class="form-signin" method="post" action="/index/signin">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <?php if($this->fail):?>
+        <p class="label label-warning"><?= $this->fail?></p>
+        <? endif;?>
+        <input type="text" class="input-block-level" placeholder="Email address" name="email">
+        <input type="password" class="input-block-level" placeholder="Password" name="password">
+        <label>        
+        <a href="/index/forget_password">forget your password?</a>
+        </label><br>    
+        <button class="btn btn-large btn-block btn-primary" type="submit">Sign in</button>
+    </form>
+</div>
+<div style="clear: both"></div>

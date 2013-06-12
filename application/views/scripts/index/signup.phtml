@@ -1,7 +1,7 @@
 <script src="/js/jquery.js"></script>
-<blockquote>
-    <p style="color:#0088CC">Sign Up With Your Baruch Email</p>
-</blockquote>
+
+    <p class="lead" style="color:#0088CC">Sign Up With Your Baruch Email</p>
+
 <?php if($this->error_msg):?>
 <div class="span4 error_msg"> 
     <ul>
@@ -15,9 +15,15 @@
 <div style="clear: both"></div>
 <form class="form-horizontal" id="signup" method="post" action="/index/signup" >
     <div class="control-group">
-        <label class="control-label" for="inputUsername">Username</label>
+        <label class="control-label" for="inputfname">First Name</label>
         <div class="controls">
-            <input type="text" name="username" id="inputUsername" placeholder="enter username" value="<?= $this->username ?>">
+            <input type="text" name="fname" id="inputfname" placeholder="enter first name" value="<?= $this->fname ?>">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="inputlname">Last name</label>
+        <div class="controls">
+            <input type="text" name="lname" id="inputlname" placeholder="enter last name" value="<?= $this->lname ?>">
         </div>
     </div>
     <div class="control-group">
@@ -60,10 +66,17 @@
             
             if($(this).attr('id') == 'inputEmail'){
                 validateEmail($(this).val());
-            }else if(inputId =='inputUsername'){
+            }else if(inputId =='inputfname'){
                 if(inputValue.length < 2 ){
                     $(this).parent().parent().addClass('error');
-                    $('#inputUsername').after("<span class='errorinfo'> Username must be at least 2 characters</span>");
+                    $('#inputfname').after("<span class='errorinfo'> First name must be at least 2 characters</span>");
+                }else{
+                    $(this).parent().parent().addClass('success')
+                }
+            }else if(inputId =='inputlname'){
+                if(inputValue.length < 2 ){
+                    $(this).parent().parent().addClass('error');
+                    $('#inputlname').after("<span class='errorinfo'> Last name must be at least 2 characters</span>");
                 }else{
                     $(this).parent().parent().addClass('success')
                 }

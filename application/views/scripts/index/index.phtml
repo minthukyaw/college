@@ -33,7 +33,7 @@
         <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
     </div>
 </div>
-<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!--<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">Please Sign In</h3>
@@ -50,39 +50,5 @@
     <div class="modal-footer">
         <button class="btn btn-primary">Sign In</button>
     </div>
-</div>
-
-<script>
-    
-    $(document).ready(function(){
-        $('#myModal').modal({                    
-            backdrop:true,
-            show:false
-        });
-        
-        $('.log_in').click(function(e){
-            e.preventDefault();
-            $('#myModal').modal('show');
-        });
-        
-        $('#signup').submit(function() {
-            validateEmail($('input').val());
-            return false;
-        });
-
-        function validateEmail(email) {
-            var re = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
-            if (re.test(email)) {
-                if (email.indexOf('@c-e.com', email.length - '@c-e.com'.length) !== -1) {
-                    alert('Submission was successful.');
-                } else {
-                    alert('Email must be a CE e-mail address (your.name@c-e.com).');
-                }
-            } else {
-                alert('Not a valid e-mail address.');
-            }
-        }
-        
-    });
-</script>
+</div>-->
 

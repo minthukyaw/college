@@ -1,0 +1,46 @@
+<div class="frame">
+    <div class="left">
+        <img src="<?= $this->userinfo[0]['profile_pic']?>" class="thumbnail profile_image">
+        <div class="profile_image">
+            <p class="text-center" style="color: #0088CC"><?= $this->username ?></p>
+            <hr>
+            Major : Undecided <br>          
+            Year  : Junior <br>            
+            <a href="/pm/new_message?receip_id=<?= $this->userinfo[0]['id'] ?>"><i class="icon icon-envelope"></i>&nbsp;&nbsp;Send Message</a><br>            
+        </div>
+    </div>
+    <div class="span6">    
+        <form action="/member/mystatus" method="post">           
+            <p class="lead page_msg">Post On <?= $this->username ?>'s Wall</p>
+            <input type="hidden" value="<?= $this->userinfo[0]['id'] ?>" name="wall_owner" />            
+            <textarea rows="3" class="post_status" name="status_post"></textarea>
+            <div class="post_bottom">
+                <button class="btn btn-block right" type="submit">Share</button>
+            </div>
+        </form>
+        
+        <table>
+            <?php foreach ($this->status_post as $posts):?>
+                <tr>
+                    <div>
+                        <?php if($posts['poster'] != $posts['wall_owner']):?>
+                        <p>
+                            <a href="/member/profile/?id=<?= $posts['poster'] ?>"><img class="wall_img" src="<?= $posts['profile_pic'] ?>"><?= $posts['first_name'] ?>&nbsp;<?= $posts['last_name'] ?></a> <span class="arrow">&raquo;</span>
+                            <a href="/member/profile/?id=<?= $posts['wall_owner'] ?>"><?= $posts['ownerfname'] ?>&nbsp;<?= $posts['ownerlname'] ?></a>
+                        </p>
+                        <?php else : ?>
+                        <p><a href="/member/profile/?id=<?= $posts['poster'] ?>"><img class="wall_img" src="<?= $posts['ownerprofilepic'] ?>"><?= $posts['first_name'] ?>&nbsp;<?= $posts['last_name'] ?></a></p>
+                        <?php endif; ?>
+                        <p class="post"><?= stripslashes($posts['post']) ?></p>
+                        <span class="time">
+                            Posted On <?= date("jS \ F Y h:i:s A e", $posts['created']) ?>
+                        </span>
+                    </div>
+                    <div style="clear: both"></div>
+                    <hr>   
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+</div>
+<div style="clear: both"></div>

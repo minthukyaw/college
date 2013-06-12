@@ -70,10 +70,11 @@ class My_Validation {
     }
     
     public function checkemail($email){
+        
         $isvalid = true;
         $albums = new College_Model_User();
         
-        $a = $albums->search2('email', array('email = ? ' => 'minthu@baruchmail.cuny.edu'));
+        $a = $albums->search2('email', array('email = ? ' => $email));
         if($a['email']['email'] == $email){
             $this->data[]='this email address is already registered';
             $isvalid = FALSE;

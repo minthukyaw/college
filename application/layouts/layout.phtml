@@ -49,9 +49,7 @@
                 margin-top: 28px;
             }
         </style>
-        <script>
-            
-        </script>
+        
         <link href="../assets/css/bootstrap-responsive.css" rel="stylesheet">
 
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -70,18 +68,40 @@
     <body>
 
         <div class="container-narrow">
-
-            <div class="masthead">
-                <ul class="nav nav-pills pull-right">
-                    <li class="active"><a href="/index">Home</a></li>
-                    <li class=""><a class="log_in" href="index/signin">Log In</a></li>
-                    <li class=""><a href="/index/signup">Sign Up</a></li>
-                </ul>
-                <h3 class="muted" style="color:#0088CC">Baruch Stance</h3>
-            </div>
-
+            <?php $auth = Zend_Auth::getInstance();
+            if ($auth->hasIdentity()):
+                ?>
+                <div class="masthead">
+                    <ul class="nav nav-pills pull-right">                         
+                        <li class="<?= $this->mainactive ?>"><a href="/main/listposts">Home</a></li>                            
+                        <li class="<?= $this->memberactive ?>"><a class="log_in" href="/member/profile">Profile</a></li>                        
+                        <li class="dropdown">
+                            <a class="dropdown-toggle <?= $this->memberactive ?>" data-toggle="dropdown" href="/member/profile">
+                                Account
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/member/private_message"><i class="icon icon-envelope"></i>&nbsp;&nbsp;Inbox</a></li>
+                                <li><a href="/member/setting"><i class="icon icon-wrench"></i>&nbsp;&nbsp;Setting</a></li>
+                                <li><a href="/index/logout"><i class="icon icon-off"></i>&nbsp;&nbsp;log out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <h3 class="muted" style="color:#0088CC"><a style="text-decoration: none" href="/index">Baruch Stance</a></h3>
+                </div>
+<?php else : ?>
+                <div class="masthead">
+                    <ul class="nav nav-pills pull-right">
+                        <li class="active"><a href="/index">Home</a></li>
+                        <li class=""><a class="log_in" href="/index/signin">Sign In</a></li>
+                        <li class=""><a href="/index/signup">Sign Up</a></li>
+                    </ul>
+                    <h3 class="muted" style="color:#0088CC"><a style="text-decoration: none" href="/index">Baruch Stance</a></h3>
+                </div>
+<?php endif; ?>
             <hr>
-            <?php echo $this->layout()->content ?> 
+
+<?php echo $this->layout()->content ?> 
 
             <hr>
 
@@ -97,6 +117,10 @@
         <script src="/js/jquery.js"></script>
         <script src="/js/bootstrap.js"></script>
         <script src="/js/bootstrap.min.js"></script>
-        
+        <script>
+            $(document).ready(function(){
+                $('.dropdown-toggle').dropdown();
+            })
+        </script>
     </body>
 </html>

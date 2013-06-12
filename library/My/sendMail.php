@@ -12,7 +12,7 @@
  */
 class My_sendMail {
     
-    public function send_confirm_code($code,$email,$redirect){
+    public function send_confirm_code($email,$redirect,$encode){
         
         $tr = new Zend_Mail_Transport_Smtp('smtp.gmail.com', array(
 	'auth' => 'login',
@@ -23,20 +23,21 @@ class My_sendMail {
         );
         
         Zend_Mail::setDefaultTransport($tr);
-        
-        $sql = College_Model_User::getInstance();
-        
-        
-        
+              
         $message = "<h5>Thank for registering. Click the following link to verify your account</h5>
-                    <p>".$redirect."</p>
-                    <p> your confirmation code is:".$code."</p>";
+                    <a href=".$redirect.">".$redirect."</a>";
+                    
         $mail = new Zend_Mail();
-        $mail->setBodyHtml($code);
+        $mail->setBodyHtml($message);
         $mail->addTo($email);
         $mail->setSubject("confirmation Code");
         $mail->setFrom('minthukyaw@gmail.com');
         $mail->send();
+        
+        $new_row = College_Model_Verify::getNewInstance();
+        $new_row->email = $email;
+        $new_row->code  = $encode;
+        $new_row->save();
     }
     
     public function gen_random(){

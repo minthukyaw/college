@@ -1,0 +1,11 @@
+
+<div class="jumbotron">
+<img src="/img/bearcats.jpg" class="img-rounded span4 thanks">
+<div style="clear:both"></div>
+<?php if($this->success != NULL):?>
+<p class="lead"><?= $this->success?></p>
+<p class="lead"><a href="/member/loadprofile?id=<?= $this->id?>">Go To Your Profile</a></p>
+<?php else:?>
+<p class="lead"><?= $this->fail ?></p>
+<?php endif;?>
+</div>

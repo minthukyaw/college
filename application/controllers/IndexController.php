@@ -4,6 +4,7 @@ class IndexController extends Zend_Controller_Action {
 
     public function init() {
         /* Initialize action controller here */
+        $this->view->indexactive = 'active';
     }
 
     public function indexAction() {
@@ -69,47 +70,23 @@ class IndexController extends Zend_Controller_Action {
 
     public function signinAction() {
 
-        $form = new Zend_Form('POST');
-
-        $form->addElement('text', 'user_name', array(
-            'Label' => 'User Name',
-            'Required' => true
-        ));
-
-        $form->addElement('password', 'password', array(
-            'Label' => 'Password',
-            'Required' => true
-        ));
-
-        $form->addElement('submit', 'Add');
-
-
-
         if ($this->_request->isPost()) {
+            
+            $authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Db_Table::getDefaultAdapter(), 'user', 'email', 'password'); // second is indentity and 3rd is credential
+            $authAdapter->setIdentity($_POST['email']);
+            $authAdapter->setCredential($_POST['password']);
 
-
-            if ($form->isValid($_POST)) {
-
-
-                $authAdapter = new Zend_Auth_Adapter_DbTable(Zend_Db_Table::getDefaultAdapter(), 'user', 'user_name', 'password'); // second is indentity and 3rd is credential
-
-                $authAdapter->setIdentity($_POST['user_name']);
-                $authAdapter->setCredential($_POST['password']);
-
-                $auth = Zend_Auth::getInstance(); // getinstance will give an object
-                $result = $auth->authenticate($authAdapter);
-                if ($result->isValid()) {
-                    //log in successful
-                    $data = $authAdapter->getResultRowObject(null, 'password');
-                    $auth->getStorage()->write($data);
-
-                    $this->_redirect('/member');
-                } else {
-                    $this->view->fail = true;
-                }
-            }
+            $auth = Zend_Auth::getInstance(); // getinstance will give an object
+            $result = $auth->authenticate($authAdapter);
+            if ($result->isValid()) {
+                //log in successful
+                $data = $authAdapter->getResultRowObject(null, 'password');
+                $auth->getStorage()->write($data);
+                $this->_redirect('/member/profile');
+            } else {
+                $this->view->fail = 'invalid credential';
+            }           
         }
-        $this->view->signin = $form;
     }
 
     public function logoutAction() {
@@ -120,41 +97,49 @@ class IndexController extends Zend_Controller_Action {
 
     public function signupAction() {
         
-        if ($_POST['username']) {
+        if ($_POST['fname']) {
             
-            $username = mysql_real_escape_string($_POST['username']);
+            $fname = mysql_real_escape_string($_POST['fname']);
+            $lname = mysql_real_escape_string($_POST['lname']);
             $email = mysql_real_escape_string($_POST['email']);
             $password = mysql_real_escape_string($_POST['password']);
             $confirmpassword = mysql_real_escape_string($_POST['conpassword']);
             
+            $username = array($fname,$lname);
+            $username = implode(" ", $username);
+            
             $signup = new My_Validation();
             $valemail = $signup->validateemail($email);
-            $valusername = $signup->validateusername($username);
+            $valfname = $signup->validateusername($fname);
+            $vallname = $signup->validateusername($lname);
             $valpassword = $signup->validatepassword($password, $confirmpassword);
             $checkemail = $signup->checkemail($email);
             
             
-            if ($valemail && $valusername && $valpassword && $checkemail) {
+            if ($valemail && $valfname && $vallname && $valpassword && $checkemail) {
 
                 $user = College_Model_User::getNewInstance(); // call to the STATIC method of getNewIntance, which is defined in parent class
                 //now album is an object, whose properties are table column names in db
                 $user->password = $password;
-                $user->username = $username;
+                $user->first_name = $fname;
+                $user->last_name = $lname;
                 $user->email = $email;
                 $user->save(); //call to this method to save 
+                $id = $user->id;
                 
                 $send_mail = new My_sendMail();              
                 $code = $send_mail->gen_random(); 
-                $encode = md5($email);
-                $redirect = 'http://college/index/verify?code='.$code;
-                $send_mail->send_confirm_code($code, $email,$redirect);
+                $encode = md5($code);
+                $redirect = 'http://college/index/verify?code='.$encode.'&email='.$email.'&id='.$id;
+                $send_mail->send_confirm_code($email,$redirect,$encode);
                 
-                $param = array('username'=>$username,'encode'=>$encode);
-                $this->redirect('/index/verify?=');
-                $this->_helper->redirector('verify','index',$param);
+                
+                $param = array('username'=>$username);
+                $this->_helper->redirector('thanks','index',$param);
                 
             }else{
-                $this->view->username = $username;
+                $this->view->fname = $fname;
+                $this->view->lname = $lname;
                 $this->view->email = $email;
                 $this->view->password = $password;
                 $this->view->conpassword = $confirmpassword;
@@ -167,8 +152,48 @@ class IndexController extends Zend_Controller_Action {
         }//if post
     }
     
-    public function verifyAction(){
-        fsdf;
+    public function verifyAction() {
+        $email = $_GET['email'];
+        $code  = $_GET['code'];
+        $id    = $_GET['id'];
+        
+        $db = College_Model_Verify::getDefaultAdapter();
+        $get_check = $db->select()
+                ->from('verify','id')
+                ->where('email=?',$email)
+                ->where('code=?',$code);                       
+        $checkrequest = $db->fetchRow($get_check);
+        $checkrequest = ($checkrequest['id']);
+        
+        if($checkrequest != NULL){
+            $user = College_Model_User::getInstance($id);
+            $user->status = 1;
+            $user->save();
+            
+            $delete = College_Model_Verify::getInstance($checkrequest);
+            $delete->delete();
+            
+            $this->autologinAction($id);
+            $this->_redirect('/member/profile');           
+            
+        }else{
+            $this->view->fail = "Sorry! We Don't See Any Record Of Your Registration :(";
+        }
+        
+    }
+    
+    public function thanksAction() {
+        
+        $username = $this->_getParam('username');       
+        $this->view->username = $username;
+    }
+    
+    public function autologinAction($id){
+        
+        $auth = Zend_Auth::getInstance();
+        $storage = $auth->getStorage();
+        $user = College_Model_User::getInstance($id);
+        $storage->write($user);     
     }
 
 }

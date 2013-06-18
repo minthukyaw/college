@@ -1,12 +1,16 @@
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap.js"></script>
+
+
 <div class="frame">
     <div class="left">
-        <img src="<?= $this->userinfo[0]['profile_pic']?>" class="thumbnail profile_image">
+        <img src="<?= $this->userinfo[0]['profile_pic'] ?>" class="thumbnail profile_image">
         <div class="profile_image">
             <p class="text-center" style="color: #0088CC"><?= $this->username ?></p>
             <hr>
             Major : Undecided <br>          
             Year  : Junior <br>            
-            <a href="/pm/new_message?receip_id=<?= $this->userinfo[0]['id'] ?>"><i class="icon icon-envelope"></i>&nbsp;&nbsp;Send Message</a><br>            
+            <a class="btn btn-info message"><i class="icon icon-envelope icon-white"></i>&nbsp;&nbsp;Send Message</a><br>            
         </div>
     </div>
     <div class="span6">    
@@ -18,29 +22,99 @@
                 <button class="btn btn-block right" type="submit">Share</button>
             </div>
         </form>
-        
+
         <table>
-            <?php foreach ($this->status_post as $posts):?>
+            <?php foreach ($this->status_post as $posts): ?>
                 <tr>
-                    <div>
-                        <?php if($posts['poster'] != $posts['wall_owner']):?>
+                <div>
+                    <?php if ($posts['poster'] != $posts['wall_owner']): ?>
                         <p>
                             <a href="/member/profile/?id=<?= $posts['poster'] ?>"><img class="wall_img" src="<?= $posts['profile_pic'] ?>"><?= $posts['first_name'] ?>&nbsp;<?= $posts['last_name'] ?></a> <span class="arrow">&raquo;</span>
                             <a href="/member/profile/?id=<?= $posts['wall_owner'] ?>"><?= $posts['ownerfname'] ?>&nbsp;<?= $posts['ownerlname'] ?></a>
                         </p>
-                        <?php else : ?>
+                    <?php else : ?>
                         <p><a href="/member/profile/?id=<?= $posts['poster'] ?>"><img class="wall_img" src="<?= $posts['ownerprofilepic'] ?>"><?= $posts['first_name'] ?>&nbsp;<?= $posts['last_name'] ?></a></p>
-                        <?php endif; ?>
-                        <p class="post"><?= stripslashes($posts['post']) ?></p>
-                        <span class="time">
-                            Posted On <?= date("jS \ F Y h:i:s A e", $posts['created']) ?>
-                        </span>
-                    </div>
-                    <div style="clear: both"></div>
-                    <hr>   
+                    <?php endif; ?>
+                    <p class="post"><?= stripslashes($posts['post']) ?></p>
+                    <span class="time">
+                        Posted On <?= date("jS \ F Y h:i:s A e", $posts['created']) ?>
+                    </span>
+                </div>
+                <div style="clear: both"></div>
+                <hr>   
                 </tr>
             <?php endforeach; ?>
         </table>
     </div>
 </div>
 <div style="clear: both"></div>
+
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Message To <?= $this->username ?></h3>
+        </div>
+        
+        <div class="modal-body">
+            <form class="modalForm" method="post">                       
+                <label>To</label>
+                <input class="span6" type="text" value="<?= $this->username ?>">
+
+                <label>Subject</label>
+                <input class="span6 title" type="text" placeholder="Type something…" name="title"><br>
+                <textarea class="span6 body" rows="11" name="post"></textarea>
+                <button id="submit" type="submit" style="display: none">upload</button>
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn messageSend btn-primary" data-dismiss="modal" aria-hidden="true">Send</button>
+        </div>
+</div>
+<div class="modal hide fade success">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Yayyyy!</h3>
+    </div>
+    <div class="modal-body">
+        <p id="success"></p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        
+        $('#myModal').modal({                    
+            backdrop:true,
+            show:false
+        });
+        
+        $('.message').click(function(){
+            $('#myModal').modal('show');
+        });
+        
+        $(".messageSend").on("change keyup paste click", function(e){
+            e.preventDefault();
+            console.log('messageSend click');
+            //$('#submit').click();
+            var title = $('.title').val();
+            var post = $('.body').val();
+            $.post('/pm/newmessagesend',
+            {
+                'title':title,
+                'post':post,
+                'receip_id':<?= $this->userinfo[0]['id'] ?>
+            },function(data){
+                $('#success').html(data.success);
+               $('.success').modal('show');
+              
+            },'json'//function
+        )//post
+            //return false;
+        });    
+        
+    });
+</script>

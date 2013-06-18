@@ -7,67 +7,6 @@ class IndexController extends Zend_Controller_Action {
         $this->view->indexactive = 'active';
     }
 
-    public function indexAction() {
-
-        $form = new Zend_Form('POST');
-
-        $form->addElement('text', 'first_name', array(
-            'Label' => 'First Name',
-            'Required' => true
-        ));
-
-        $form->addElement('text', 'last_name', array(
-            'Label' => 'Last Name',
-            'Required' => true
-        ));
-
-        $form->addElement('text', 'username', array(
-            'Label' => 'User Name',
-            'Required' => true
-        ));
-
-        $form->addElement('password', 'password', array(
-            'Label' => 'Password',
-            'Required' => true,
-        ));
-
-        $form->addElement('text', 'email', array(
-            'Label' => 'Email Address',
-            'Required' => true,
-        ));
-
-        //you need to understand how SELECT html field works when form is submitted
-        $form->addElement('submit', 'Add');
-
-        if ($this->_request->isPost()) {
-
-
-
-
-            if ($form->isValid($_POST)) {
-//nothing here when the form is valid,
-
-
-                $user = Tuberation_Model_User::getNewInstance(); // call to the STATIC method of getNewIntance, which is defined in parent class
-                //now album is an object, whose properties are table column names in db
-                $user->first_name = $_POST['first_name'];
-                $user->last_name = $_POST['last_name'];
-                $user->password = $_POST['password'];
-                $user->user_name = $_POST['username'];
-                $user->email = $_POST['email'];
-                $user->save(); //call to this method to save 
-                $this->_redirect('/index/signin');
-            } else {
-
-
-                $form->populate($_POST);
-            }
-        }
-
-
-        $this->view->signup_form = $form;
-    }
-
     public function signinAction() {
 
         if ($this->_request->isPost()) {

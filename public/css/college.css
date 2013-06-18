@@ -8,10 +8,10 @@
 
 
 
-#myModal{
-    width: 400px;   
-    left: 725px; /* was 10% */
+.modalForm{
+    margin-left: 35px;
 }
+
 #example{
     display: none;
 }
@@ -106,7 +106,7 @@
 }
 .post{
     word-wrap:break-word;
-    margin-left: 20px;
+    margin-left: 50px;
 }
 .arrow{
     font-size: 18px;
@@ -124,6 +124,11 @@
     padding: 4px;
     transition: all 0.2s ease-in-out 0s;
     margin-right: 5px;
+    margin-top: 19px;
 }
+.pm{
+    margin-top: 10px;
+}
+
 
 
